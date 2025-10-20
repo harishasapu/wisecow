@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
-    argocd-image-updater.argoproj.io/image-list: wisecow=saurabhkr952/wisecow
+    argocd-image-updater.argoproj.io/image-list: wisecow=harishasapu/wisecow:latest
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/wisecow.update-strategy: newest-build    
   name: wisecow
@@ -14,7 +14,7 @@ spec:
   project: default
   source:
     path: gitops
-    repoURL: https://github.com/saurabhkr952/accuknox-submission.git
+    repoURL: https://github.com/harishasapu/wisecow.git
     targetRevision: HEAD
   syncPolicy:
     automated:
