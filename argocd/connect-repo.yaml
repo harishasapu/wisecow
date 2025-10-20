@@ -6,10 +6,10 @@ metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  username:                                                                                                                                                                                          
-  name:                                                                                                                                                                                            
+  username: harishasapu                                                                                                                                                                                        
+  name: wisecow                                                                                                                                                                                        
   password:     ###### Replace <PAT> with your Personal Access Token                                                                                                                                                           
   project: default                                                                                                                                                                                                   
   type: git                                                                                                                                                                                                          
-  url:  
+  url: https://github.com/harishasapu/wisecow.git
 
