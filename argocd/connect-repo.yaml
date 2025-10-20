@@ -8,7 +8,7 @@ metadata:
 stringData:
   username: saurabhkr952                                                                                                                                                                                             
   name: accuknox-subbmition                                                                                                                                                                                          
-  password: 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    ###### Replace <PAT> with your Personal Access Token                                                                                                                                                           
+  password:     ###### Replace <PAT> with your Personal Access Token                                                                                                                                                           
   project: default                                                                                                                                                                                                   
   type: git                                                                                                                                                                                                          
   url: https://github.com/Saurabhkr952/accuknox-submission.git                                                                                                                                                       
