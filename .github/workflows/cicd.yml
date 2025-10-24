@@ -49,17 +49,23 @@ jobs:
           git add manifests/wisecow-deployment.yaml
           git commit -m "Auto-update deployment image to $IMAGE [skip ci]" || echo "No changes"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:main
-          
-      # Step 7: Argo CD auto-sync with K8s cluster
+      # Step 7: Argo CD auto-sync with Kubernetes cluster
       - name: Install Argo CD CLI
         run: |
           curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
-          argocd version
-      - name: Sync with Argo CD
+          argocd version --client
+
+      - name: Sync Application with Argo CD
         env:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
-          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
-          argocd login $ARGOCD_SERVER --auth-token $ARGOCD_AUTH_TOKEN --insecure
-          argocd app sync wisecow-app
+       # Login to Argo CD using token
+        argocd login "$ARGOCD_SERVER" --auth-token "$ARGOCD_AUTH_TOKEN" --insecure
+
+    # Sync the application
+        argocd app sync wisecow-app --prune --timeout 300
+
+    # Wait until the app is healthy and synced
+        argocd app wait wisecow-app --health --sync
