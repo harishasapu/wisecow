@@ -1,0 +1,7 @@
+resources:
+  - namespace.yaml
+  - wisecow-deployment.yaml
+  - wisecow-service.yaml
+  - wisecow-ingress.yaml
+  - cluster-issuer.yaml
+  - argocd-application.yaml
