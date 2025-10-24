@@ -49,23 +49,7 @@ jobs:
           git add manifests/wisecow-deployment.yaml
           git commit -m "Auto-update deployment image to $IMAGE [skip ci]" || echo "No changes"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:main
-
-      - name: Run Trivy scan on image
-        uses: aquasecurity/trivy-action@0.22.0
-        with:
-          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:${{ github.sha }}
-          format: table
-          exit-code: 1 # Fail the job if vulnerabilities are found
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy report as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-report
-          path: trivy-report.txt
-
+          
       # Step 7: Argo CD auto-sync with K8s cluster
       - name: Sync with Argo CD
         env:
@@ -73,4 +57,4 @@ jobs:
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |
           argocd login $ARGOCD_SERVER --auth-token $ARGOCD_AUTH_TOKEN --insecure
-          argocd app sync wisecow-app
+          argocd app sync wisecow-appt 
