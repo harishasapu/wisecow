@@ -32,8 +32,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/wisecow:latest
-            ${{ secrets.DOCKER_USERNAME }}/wisecow:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:${{ github.sha }}
 
       # Step 5: Update Kubernetes deployment YAML with latest image and all
       - name: Update Deployment YAML
