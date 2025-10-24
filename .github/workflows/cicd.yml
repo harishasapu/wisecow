@@ -56,5 +56,5 @@ jobs:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |
-          argocd login $ARGOCD_SERVER --auth-token $ARGOCD_AUTH_TOKEN --insecure
+          argocd login $ARGOCD_SERVER --auth-token $ARGOCD_TOKEN --insecure
           argocd app sync wisecow-appt 
