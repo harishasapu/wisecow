@@ -14,5 +14,7 @@ spec:
     namespace: wisecow
   syncPolicy:
     automated:
-      selfHeal: true
-      prune: true
+      prune: true          # Remove old resources not found in Git
+      selfHeal: true       # Automatically fix drift
+    syncOptions:
+      - CreateNamespace=true
