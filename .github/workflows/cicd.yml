@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
+
       # Step 2: Set up Docker Buildx
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -38,7 +39,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:${{ github.sha }}
 
-      # Step 5: Update Kubernetes deployment YAML with latest image and all
+      # Step 5: Update Kubernetes deployment YAML with latest image
       - name: Update Deployment YAML
         env:
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/wisecow:${{ github.sha }}
@@ -47,25 +48,29 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add manifests/wisecow-deployment.yaml
-          git commit -m "Auto-update deployment image to $IMAGE [skip ci]" || echo "No changes"
+          git commit -m "Auto-update deployment image to $IMAGE [skip ci]" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:main
-      # Step 7: Argo CD auto-sync with Kubernetes cluster
+
+      # Step 6: Install Argo CD CLI
       - name: Install Argo CD CLI
         run: |
           curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
           argocd version --client
 
+      # Step 7: Sync Application with Argo CD
       - name: Sync Application with Argo CD
         env:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
         run: |
-       # Login to Argo CD using token
-        argocd login "$ARGOCD_SERVER" --auth-token "$ARGOCD_AUTH_TOKEN" --insecure
+          echo "🔐 Logging in to Argo CD server..."
+          argocd login "$ARGOCD_SERVER" --auth-token "$ARGOCD_AUTH_TOKEN" --insecure
 
-    # Sync the application
-        argocd app sync wisecow-app --prune --timeout 300
+          echo "🔄 Syncing application 'wisecow-app'..."
+          argocd app sync wisecow-app --prune --timeout 300
 
-    # Wait until the app is healthy and synced
-        argocd app wait wisecow-app --health --sync
+          echo "✅ Waiting for application to become healthy and synced..."
+          argocd app wait wisecow-app --health --sync
+
+          echo "🎉 Wisecow application successfully deployed via Argo CD!"
