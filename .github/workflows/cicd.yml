@@ -26,12 +26,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Step 4: Build and push Docker image
-      - name: Build and Push Docker Image
-        run: |
-          IMAGE=harishasapu/wisecow:latest
-          docker build -t $IMAGE .
-          docker push $IMAGE
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/wisecow:latest
+            ${{ secrets.DOCKER_USERNAME }}/wisecow:${{ github.sha }}
 
       # Step 5: Update Kubernetes deployment YAML with latest image
       - name: Update Deployment YAML
