@@ -1,4 +1,0 @@
-kustomize:
-  images:
-  - name: harishasapu/wisecow
-    newTag: latest
