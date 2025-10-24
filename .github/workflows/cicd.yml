@@ -35,7 +35,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/wisecow:latest
             ${{ secrets.DOCKER_USERNAME }}/wisecow:${{ github.sha }}
 
-      # Step 5: Update Kubernetes deployment YAML with latest image
+      # Step 5: Update Kubernetes deployment YAML with latest image and all
       - name: Update Deployment YAML
         run: |
           sed -i "s|image:.*|image: $IMAGE|g" manifests/wisecow-deployment.yaml
